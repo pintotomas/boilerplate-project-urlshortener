@@ -1,6 +1,7 @@
 const validUrl = require('valid-url');
 require('dotenv').config();
 let mongoose = require('mongoose');
+const e = require('express');
 let Schema = mongoose.Schema;
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -12,17 +13,30 @@ let urlSchema = new Schema({
   });
   
 let Url = mongoose.model('Url', urlSchema);
-
+//Reset urls 
+Url.deleteMany({}, function(err, result){
+    if(err) return console.log(util.inspect(err));
+    console.log("cleaned up ", result.deletedCount, " records");
+  }); 
 var createAndSaveUrl = function(done, urlName, res) {
+
     var url = new Url({url: urlName, urlId: lastUrlId});
-    lastUrlId += 1;
-    url.save((err, data)=>{
-     if (err) {
-        console.log("Error happened while saving: " + err);
-        return done(err, data, res)
-     }
-     return done(null, data, res)
-    });
+    Url.find({url: urlName}, (err, doc) => {
+        if (doc.length) {
+            console.log("doc.lengh " + doc);
+            return done(err, doc[0], res);
+        } else {
+            lastUrlId += 1;
+            url.save((err, data)=>{
+             if (err) {
+                console.log("Error happened while saving: " + err);
+                return done(err, data, res)
+             }
+             return done(null, data, res)
+            });
+        }
+    })
+
    }
 
 const findOneByid = (urlId, done) => {
