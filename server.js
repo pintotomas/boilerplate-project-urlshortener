@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const validUrl = require('valid-url');
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
@@ -20,6 +19,7 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
+const validateUrl = require("./myApp.js").validateUrl;
 app.route("/api/shorturl")
     .get(function(req, res) {
         //TO DO
@@ -27,7 +27,7 @@ app.route("/api/shorturl")
     .post(function(req, res) {
         console.log(req.body);
         console.log(req.body.url);
-        if(!validUrl.isUri(req.body.url)) {
+        if(!validateUrl(req.body.url)) {
           res.json({"error": "Invalid URL"});
           return;
         }
