@@ -20,6 +20,9 @@ app.get('/api/hello', function(req, res) {
 });
 
 const validateUrl = require("./myApp.js").validateUrl;
+const createAndSaveUrl = require("./myApp.js").createAndSaveUrl;
+const handleCreateAndSaveUrl = require("./myApp.js").handleCreateAndSaveUrl;
+
 app.route("/api/shorturl")
     .get(function(req, res) {
         //TO DO
@@ -27,12 +30,20 @@ app.route("/api/shorturl")
     .post(function(req, res) {
         console.log(req.body);
         console.log(req.body.url);
-        if(!validateUrl(req.body.url)) {
+        if (!validateUrl(req.body.url)) {
           res.json({"error": "Invalid URL"});
           return;
         }
-        res.json({"OK": "Valid URL"});
+        createAndSaveUrl(handleCreateAndSaveUrl , req.body.url, res);
+        //console.log("Resulting of save is: " + result);
+        // if (result) {
+        //   res.json({"OK": "Valid saved URL"});
+        // } else {
+        //   res.json({"error": "Failed to save URL"})
+        // }
     });
+
+
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
