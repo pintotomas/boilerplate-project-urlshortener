@@ -45,8 +45,9 @@ const validateUrl = (url) => {
 
     //should add https:// to the url if it doesnt have it
     //also check if the url really exists in the internet
+    var expression = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/);
     if (validUrl.isUri(url)) {
-        return true;
+        if (url.match(expression)) return true;
     }
     return false;
 

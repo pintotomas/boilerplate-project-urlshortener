@@ -1,14 +1,18 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const app = express();
+const bodyParser = require("body-parser");
+
 // Basic Configuration
 const port = process.env.PORT || 3000;
+var cors = require('cors');
+const router = express.Router();
 
 app.use(express.json());
 app.use(cors());
-
 app.use('/public', express.static(`${process.cwd()}/public`));
+app.use(bodyParser.urlencoded({ extended: "false" }));
+app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
@@ -22,7 +26,6 @@ app.get('/api/hello', function(req, res) {
 const validateUrl = require("./myApp.js").validateUrl;
 const createAndSaveUrl = require("./myApp.js").createAndSaveUrl;
 const handleCreateAndSaveUrl = require("./myApp.js").handleCreateAndSaveUrl;
-
 app.route("/api/shorturl")
     .get(function(req, res) {
         //TO DO
@@ -41,7 +44,7 @@ app.route("/api/shorturl")
         // } else {
         //   res.json({"error": "Failed to save URL"})
         // }
-    });
+    })
 
 
 
